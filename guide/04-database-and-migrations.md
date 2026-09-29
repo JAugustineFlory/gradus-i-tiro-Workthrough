@@ -223,7 +223,7 @@ class Application(Base):
         String(20),
         default="applied",
     )
-    applied_on: Mapped[date]
+    applied_on: Mapped[date] = mapped_column()
 ```
 
 - **Line 9:** inheriting from `Base` registers the table.
@@ -235,8 +235,8 @@ class Application(Base):
 - **`String(100)`** limits text to 100 characters.
 - **Lines 15–18:** `default="applied"` fills in the status on insert
   when none is given.
-- **Line 19:** no `mapped_column` needed — `Mapped[date]` is enough for
-  SQLAlchemy to make a date column.
+- **Line 19:** `mapped_column()` declares the date column explicitly;
+  SQLAlchemy infers its SQL type from `Mapped[date]`.
 
 ```bash
 uv run pytest
