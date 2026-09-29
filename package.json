@@ -1,0 +1,16 @@
+{
+  "name": "gradus-i-tiro-workthrough",
+  "version": "1.0.0",
+  "description": "> **🚧 Beta.** This guide has not yet been fully tested end to end by\r > students. Tool versions change, and some commands, outputs, or line\r > numbers may not match what you see. If something doesn't work, check\r > [`guide/troubleshooting.md`](guide/troubleshooting.md) first, then\r > [report it](#found-a-problem) so the next person doesn't hit it.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
