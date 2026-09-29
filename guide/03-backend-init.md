@@ -29,6 +29,9 @@ uv init backend --no-readme --vcs none --python 3.12
 
 Delete `backend/main.py`. Your app will live in its own folder instead.
 
+Create `backend/src/backend/__init__.py` if it doesn't already exist. This
+package initializer lets uv build the project when you add dependencies.
+
 Open `backend/pyproject.toml` and read it. It's short:
 
 ```toml
@@ -93,8 +96,10 @@ list. These are installed for development but aren't part of the app.
 
 1. Command Palette: `Ctrl+Shift+P` / `Cmd+Shift+P`
 2. **Python: Select Interpreter**
-3. Choose the one whose path contains `backend/.venv`. If it's not
-   listed, choose **Enter interpreter path…** and browse to:
+3. Choose the interpreter whose path contains `backend/.venv`. If no
+  option contains that path, that's okay: the environment may not show
+  up in the list automatically. Choose **Enter interpreter path…** and
+  browse to the project environment (not the global Python installation):
    - Windows: `backend\.venv\Scripts\python.exe`
    - macOS / Linux: `backend/.venv/bin/python`
 
@@ -140,7 +145,9 @@ select = ["E", "F", "I"]
 
 ## Step 5 — Create the folders
 
-Create these two folders inside `backend/`, and one empty file:
+Create these two folders inside `backend/`, and one empty file. The
+`app/__init__.py` file is **additional** to `src/backend/__init__.py`:
+they belong to different packages and serve different purposes.
 
 ```text
 backend/

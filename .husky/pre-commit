@@ -1,1 +1,2 @@
-echo "Husky pre-commit hook ran."
+echo "Running backend tests..."
+(cd backend && uv run pytest -q)
