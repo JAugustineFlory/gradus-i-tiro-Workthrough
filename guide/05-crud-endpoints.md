@@ -147,10 +147,11 @@ def client(engine):
 - **Line 44** is the dependency override. **Line 47** removes it after
   the test so it can't leak into other tests.
 
-Now open `backend/tests/test_models.py` and **delete** its `session`
-fixture (the whole `@pytest.fixture` function), plus the imports it
-used: `pytest`, `create_engine`, and `Base`. The test now gets `session`
-from `conftest.py`. The top of the file should be:
+Now open `backend/tests/test_models.py`. Delete its `session` fixture
+(the whole `@pytest.fixture` function) and remove the imports used only
+by that fixture: `pytest`, `create_engine`, `Session`, and `Base`. Keep
+the imports the test itself needs. The test now gets `session` from
+`conftest.py`; replace the imports at the top with exactly:
 
 ```python
 from datetime import date
