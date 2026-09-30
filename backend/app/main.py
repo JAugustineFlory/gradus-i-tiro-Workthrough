@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends, FastAPI
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app import models, schemas
@@ -28,3 +29,11 @@ def create_application(
     db.commit()
     db.refresh(application)
     return application
+
+@app.get(
+    "/applications",
+    response_model=list[schemas.ApplicationRead],
+)
+def list_applications(db: Annotated[Session, Depends(get_db)]):
+    query = select(models.Application).order_by(models.Application.id)
+    return db.scalars(query).all()
