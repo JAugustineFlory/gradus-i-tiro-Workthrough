@@ -45,3 +45,42 @@ def test_list_returns_every_application_in_order(client):
 
     companies = [item["company"] for item in response.json()]
     assert companies == ["Acme", "Globex"]
+
+
+def test_get_application_by_id(client):
+    created = create_sample(client)
+
+    response = client.get(f"/applications/{created['id']}")
+
+    assert response.status_code == 200
+    assert response.json() == created
+
+
+def test_get_missing_application_returns_404(client):
+    response = client.get("/applications/999")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Application not found"}
+
+
+def test_update_changes_only_the_fields_sent(client):
+    created = create_sample(client)
+
+    response = client.patch(
+        f"/applications/{created['id']}",
+        json={"status": "interviewing"},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "interviewing"
+    assert body["company"] == "Acme"
+
+
+def test_update_missing_application_returns_404(client):
+    response = client.patch(
+        "/applications/999",
+        json={"status": "offer"},
+    )
+
+    assert response.status_code == 404

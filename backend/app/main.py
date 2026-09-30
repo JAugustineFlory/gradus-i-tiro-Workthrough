@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -37,3 +37,42 @@ def create_application(
 def list_applications(db: Annotated[Session, Depends(get_db)]):
     query = select(models.Application).order_by(models.Application.id)
     return db.scalars(query).all()
+
+
+@app.get("/applications/{application_id}",
+    response_model=schemas.ApplicationRead,
+)
+def get_application(
+    application_id: int,
+    db: Annotated[Session, Depends(get_db)],
+):
+    application = db.get(models.Application, application_id)
+    if application is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Application not found",
+        )
+    return application
+
+
+@app.patch(
+    "/applications/{application_id}",
+    response_model=schemas.ApplicationRead,
+)
+def update_application(
+    application_id: int,
+    payload: schemas.ApplicationUpdate,
+    db: Annotated[Session, Depends(get_db)],
+):
+  application = db.get(models.Application, application_id)
+  if application is None:
+    raise HTTPException(
+      status_code=404,
+      detail="Application not found",
+    )
+  changes = payload.model_dump(exclude_unset=True)
+  for field, value in changes.items():
+    setattr(application, field, value)
+  db.commit()
+  db.refresh(application)
+  return application
