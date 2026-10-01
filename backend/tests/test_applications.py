@@ -78,9 +78,25 @@ def test_update_changes_only_the_fields_sent(client):
 
 
 def test_update_missing_application_returns_404(client):
-    response = client.patch(
-        "/applications/999",
-        json={"status": "offer"},
-    )
+  response = client.patch(
+    "/applications/999",
+    json={"status": "offer"},
+  )
+
+  assert response.status_code == 404
+
+
+def test_delete_removes_the_application(client):
+    created = create_sample(client)
+
+    response = client.delete(f"/applications/{created['id']}")
+
+    assert response.status_code == 204
+    follow_up = client.get(f"/applications/{created['id']}")
+    assert follow_up.status_code == 404
+
+
+def test_delete_missing_application_returns_404(client):
+    response = client.delete("/applications/999")
 
     assert response.status_code == 404

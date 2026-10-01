@@ -10,6 +10,19 @@ from app.database import get_db
 app = FastAPI(title="Tiro Job Tracker")
 
 
+def find_application_or_404(
+  db: Session,
+  application_id: int,
+) -> models.Application:
+  application = db.get(models.Application, application_id)
+  if application is None:
+    raise HTTPException(
+      status_code=404,
+      detail="Application not found",
+    )
+  return application
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
@@ -46,13 +59,8 @@ def get_application(
     application_id: int,
     db: Annotated[Session, Depends(get_db)],
 ):
-    application = db.get(models.Application, application_id)
-    if application is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Application not found",
-        )
-    return application
+  return find_application_or_404(db, application_id)
+
 
 
 @app.patch(
@@ -64,15 +72,23 @@ def update_application(
     payload: schemas.ApplicationUpdate,
     db: Annotated[Session, Depends(get_db)],
 ):
-  application = db.get(models.Application, application_id)
-  if application is None:
-    raise HTTPException(
-      status_code=404,
-      detail="Application not found",
-    )
+  application = find_application_or_404(db, application_id)
   changes = payload.model_dump(exclude_unset=True)
   for field, value in changes.items():
     setattr(application, field, value)
   db.commit()
   db.refresh(application)
   return application
+
+
+@app.delete(
+  "/applications/{application_id}",
+  status_code=204,
+)
+def delete_application(
+  application_id: int,
+  db: Annotated[Session, Depends(get_db)],
+):
+  application = find_application_or_404(db, application_id)
+  db.delete(application)
+  db.commit()
