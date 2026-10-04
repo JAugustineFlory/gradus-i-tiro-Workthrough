@@ -11,6 +11,8 @@
   "coverage-gutters.showRulerCoverage": true,
 
   "editor.formatOnSave": true,
+  "editor.hover.delay": 2000,
+  "editor.suggest.showInlineDetails": false,
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.detectIndentation": false,

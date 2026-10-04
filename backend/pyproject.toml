@@ -34,6 +34,7 @@ addopts = [
     "--cov-report=term-missing",
     "--cov-report=xml",
 ]
+spec_header_format = "{module_path}:"
 
 [tool.ruff]
 line-length = 88
@@ -42,3 +43,4 @@ extend-exclude = ["migrations"]
 [tool.ruff.lint]
 select = ["E", "F", "I"]
 ignore = ["E111", "E114"]
+
